@@ -1,6 +1,11 @@
 import express from "express";
 import morgan from "morgan";
 import cors from "cors";
+import validateBody from "./helpers/validateBody.js";
+import {
+  createContactSchema,
+  updateContactSchema,
+} from "./schemas/contactsSchemas.js";
 
 import contactsRouter from "./routes/contactsRouter.js";
 
@@ -9,6 +14,9 @@ const app = express();
 app.use(morgan("tiny"));
 app.use(cors());
 app.use(express.json());
+
+app.post("/api/contacts", validateBody(createContactSchema));
+app.put("/api/contacts/:id", validateBody(updateContactSchema));
 
 app.use("/api/contacts", contactsRouter);
 
