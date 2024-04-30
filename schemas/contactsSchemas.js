@@ -26,4 +26,8 @@ export const updateContactSchema = Joi.object({
   phone: Joi.string().optional().messages({
     "any.required": "Phone is required",
   }),
-}).min(1);
+})
+  .min(1)
+  .messages({
+    "object.min": "Body must have at least one field",
+  });
