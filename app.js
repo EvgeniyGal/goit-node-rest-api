@@ -3,12 +3,6 @@ import morgan from "morgan";
 import cors from "cors";
 import mongoose from "mongoose";
 import contactsRouter from "./routes/contactsRouter.js";
-import {
-  createContactSchema,
-  updateContactSchema,
-  updateStatusContactSchema,
-} from "./schemas/contactsSchemas.js";
-import validateBody from "./helpers/validateBody.js";
 import "dotenv/config";
 
 const DB_URL = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@testcluster.80vox3c.mongodb.net/db-contacts?retryWrites=true&w=majority&appName=testCluster`;
@@ -19,12 +13,6 @@ app.use(morgan("tiny"));
 app.use(cors());
 app.use(express.json());
 
-app.post("/api/contacts", validateBody(createContactSchema));
-app.put("/api/contacts/:id", validateBody(updateContactSchema));
-app.patch(
-  "/api/contacts/:id/favorite",
-  validateBody(updateStatusContactSchema)
-);
 app.use("/api/contacts", contactsRouter);
 
 app.use((_, res) => {
