@@ -1,9 +1,11 @@
 import { Schema, model } from "mongoose";
+import { setReturnNew } from "./middlewares.js";
 
 const contact = new Schema(
   {
     name: {
       type: String,
+      required: [true, "Set name for contact"],
     },
     email: {
       type: String,
@@ -20,5 +22,7 @@ const contact = new Schema(
     versionKey: false,
   }
 );
+
+contact.pre("findOneAndUpdate", setReturnNew);
 
 export default model("Contact", contact);

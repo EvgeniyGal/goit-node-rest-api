@@ -17,7 +17,7 @@ export const createContact = async (body) => {
 };
 
 export const updateContact = async (_id, body) => {
-  return await contactModel.findByIdAndUpdate(_id, body, { new: true });
+  return await contactModel.findByIdAndUpdate(_id, body);
 };
 
 export default {
