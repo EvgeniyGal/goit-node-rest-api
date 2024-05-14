@@ -31,8 +31,9 @@ const userSchema = new Schema(
 
 userSchema.post("create", handleSaveError);
 userSchema.post("save", handleSaveError);
-
 userSchema.pre("findOneAndUpdate", setUpdateSettings);
+userSchema.pre("findByIdAndUpdate", setUpdateSettings);
 userSchema.post("findOneAndUpdate", handleSaveError);
+userSchema.post("findByIdAndUpdate", handleSaveError);
 
 export default model("User", userSchema);

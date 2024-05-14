@@ -11,11 +11,13 @@ export const createContactSchema = Joi.object({
   email: Joi.string().pattern(regexEmail).required().messages({
     "string.email": "Email is not valid",
     "any.required": "Set email for contact",
+    "string.pattern.base": "Email is not valid",
   }),
 
   phone: Joi.string().pattern(regexPhone).required().messages({
     "string.pattern.base": "Phone is not valid",
     "any.required": "Set phone for contact",
+    "string.pattern.base": "Phone is not valid",
   }),
   favorite: Joi.boolean().optional(),
 });
@@ -28,9 +30,11 @@ export const updateContactSchema = Joi.object({
 
   email: Joi.string().pattern(regexEmail).optional().messages({
     "string.email": "Email is not valid",
+    "string.pattern.base": "Email is not valid",
   }),
 
   phone: Joi.string().pattern(regexPhone).optional().messages({
+    "string.pattern.base": "Phone is not valid",
     "string.pattern.base": "Phone is not valid",
   }),
   favorite: Joi.boolean().optional(),
