@@ -15,25 +15,23 @@ import {
 import validateBody from "../helpers/validateBody.js";
 import validateId from "../helpers/validateId.js";
 import { validateToken } from "../helpers/validateToken.js";
+import validateQuery from "../helpers/validateQuery.js";
+import { contactQuerySchemas } from "../schemas/contactQuerySchemas.js";
 
 const contactsRouter = express.Router();
 
-contactsRouter.get("/", validateToken, getAllContacts);
+contactsRouter.use(validateToken);
 
-contactsRouter.get("/:id", validateToken, validateId, getOneContact);
+contactsRouter.get("/", validateQuery(contactQuerySchemas), getAllContacts);
 
-contactsRouter.delete("/:id", validateToken, validateId, deleteContact);
+contactsRouter.get("/:id", validateId, getOneContact);
 
-contactsRouter.post(
-  "/",
-  validateToken,
-  validateBody(createContactSchema),
-  createContact
-);
+contactsRouter.delete("/:id", validateId, deleteContact);
+
+contactsRouter.post("/", validateBody(createContactSchema), createContact);
 
 contactsRouter.put(
   "/:id",
-  validateToken,
   validateId,
   validateBody(updateContactSchema),
   updateContact
@@ -41,7 +39,6 @@ contactsRouter.put(
 
 contactsRouter.patch(
   "/:id/favorite",
-  validateToken,
   validateId,
   validateBody(updateStatusContactSchema),
   updateStatusContact

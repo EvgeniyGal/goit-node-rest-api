@@ -1,6 +1,15 @@
 import contactModel from "../models/Contact.js";
 
-const getAllContacts = async (_id) => {
+const getAllContacts = async (_id, { page, limit, favorite }) => {
+  if (page && limit) {
+    return await contactModel
+      .find(favorite ? { owner: _id, favorite } : { owner: _id })
+      .skip((page - 1) * limit)
+      .limit(limit);
+  }
+  if (favorite) {
+    return await contactModel.find({ owner: _id, favorite });
+  }
   return await contactModel.find({ owner: _id });
 };
 
