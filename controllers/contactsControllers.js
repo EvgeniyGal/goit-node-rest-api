@@ -2,14 +2,14 @@ import contactsService from "../services/contactsServices.js";
 
 const NOT_FOUND = "Not found";
 
-export const getAllContacts = async (_, res) => {
-  const result = await contactsService.getAllContacts();
+export const getAllContacts = async (req, res) => {
+  const result = await contactsService.getAllContacts(req.user._id, req.query);
   res.json(result);
 };
 
 export const getOneContact = async (req, res) => {
   const { id } = req.params;
-  const result = await contactsService.getOneContact(id);
+  const result = await contactsService.getOneContact(req.user._id, id);
   if (!result) {
     res.status(404).json({ message: NOT_FOUND });
     return;
@@ -19,7 +19,7 @@ export const getOneContact = async (req, res) => {
 
 export const deleteContact = async (req, res) => {
   const { id } = req.params;
-  const result = await contactsService.deleteContact(id);
+  const result = await contactsService.deleteContact(req.user._id, id);
   if (!result) {
     res.status(404).json({ message: NOT_FOUND });
     return;
@@ -29,14 +29,14 @@ export const deleteContact = async (req, res) => {
 
 export const createContact = async (req, res) => {
   const body = req.body;
-  const result = await contactsService.createContact(body);
+  const result = await contactsService.createContact(req.user._id, body);
   res.json(result);
 };
 
 export const updateContact = async (req, res) => {
   const { id } = req.params;
   const body = req.body;
-  const result = await contactsService.updateContact(id, body);
+  const result = await contactsService.updateContact(req.user._id, id, body);
   if (!result) {
     res.status(404).json({ message: NOT_FOUND });
     return;
@@ -45,9 +45,9 @@ export const updateContact = async (req, res) => {
 };
 
 export const updateStatusContact = async (req, res) => {
-  const id = req.params.id;
+  const { id } = req.params;
   const body = req.body;
-  const contact = await contactsService.updateContact(id, body);
+  const contact = await contactsService.updateContact(req.user._id, id, body);
   if (!contact) {
     res.status(404).json({ message: NOT_FOUND });
     return;

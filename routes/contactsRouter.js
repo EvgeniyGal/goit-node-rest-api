@@ -14,10 +14,15 @@ import {
 } from "../schemas/contactsSchemas.js";
 import validateBody from "../helpers/validateBody.js";
 import validateId from "../helpers/validateId.js";
+import { validateToken } from "../helpers/validateToken.js";
+import validateQuery from "../helpers/validateQuery.js";
+import { contactQuerySchemas } from "../schemas/contactQuerySchemas.js";
 
 const contactsRouter = express.Router();
 
-contactsRouter.get("/", getAllContacts);
+contactsRouter.use(validateToken);
+
+contactsRouter.get("/", validateQuery(contactQuerySchemas), getAllContacts);
 
 contactsRouter.get("/:id", validateId, getOneContact);
 

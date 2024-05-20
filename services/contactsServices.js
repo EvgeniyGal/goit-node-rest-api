@@ -1,23 +1,38 @@
 import contactModel from "../models/Contact.js";
 
-export const getAllContacts = async () => {
-  return await contactModel.find();
+const getAllContacts = async (_id, { page, limit, favorite }) => {
+  if (page && limit) {
+    return await contactModel
+      .find(favorite ? { owner: _id, favorite } : { owner: _id })
+      .skip((page - 1) * limit)
+      .limit(limit);
+  }
+  if (favorite) {
+    return await contactModel.find({ owner: _id, favorite });
+  }
+  return await contactModel.find({ owner: _id });
 };
 
-export const getOneContact = async (_id) => {
-  return await contactModel.findById(_id);
+const getOneContact = async (userId, contactId) => {
+  return await contactModel.findById({ _id: contactId, owner: userId });
 };
 
-export const deleteContact = async (_id) => {
-  return await contactModel.findByIdAndDelete(_id);
+const deleteContact = async (userId, contactId) => {
+  return await contactModel.findByIdAndDelete({
+    _id: contactId,
+    owner: userId,
+  });
 };
 
-export const createContact = async (body) => {
-  return await contactModel.create(body);
+const createContact = async (_id, body) => {
+  return await contactModel.create({ ...body, owner: _id });
 };
 
-export const updateContact = async (_id, body) => {
-  return await contactModel.findByIdAndUpdate(_id, body);
+const updateContact = async (userId, contactId, body) => {
+  return await contactModel.findByIdAndUpdate(
+    { _id: contactId, owner: userId },
+    body
+  );
 };
 
 export default {

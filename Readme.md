@@ -1,6 +1,8 @@
 ## What is this?
 
 This is a Node.js REST API for managing contacts. It's built with Express.js and MongoDB.
+All requests require a valid JWT token in the Authorization header.
+Validation of request body, query params and path params is done using Joi.
 
 ## How to start
 
@@ -21,3 +23,4 @@ This is a Node.js REST API for managing contacts. It's built with Express.js and
 This is what should be in your `.env` file:
 DB_USER = "YourLogin"
 DB_PASSWORD = "YourPassword"
+JWT_SECRET = "Super secret"

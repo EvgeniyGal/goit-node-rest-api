@@ -1,5 +1,6 @@
 import { Schema, model } from "mongoose";
-import { setReturnNew } from "./middlewares.js";
+import { handleSaveError, setUpdateSettings } from "./hooks.js";
+import { regexEmail, regexPhone } from "./constants.js";
 
 const contact = new Schema(
   {
@@ -9,13 +10,19 @@ const contact = new Schema(
     },
     email: {
       type: String,
+      match: regexEmail,
     },
     phone: {
       type: String,
+      match: regexPhone,
     },
     favorite: {
       type: Boolean,
       default: false,
+    },
+    owner: {
+      type: Schema.Types.ObjectId,
+      ref: "users",
     },
   },
   {
@@ -23,6 +30,8 @@ const contact = new Schema(
   }
 );
 
-contact.pre("findOneAndUpdate", setReturnNew);
+contact.post("save", handleSaveError);
+contact.pre("findOneAndUpdate", setUpdateSettings);
+contact.post("findOneAndUpdate", handleSaveError);
 
 export default model("Contact", contact);

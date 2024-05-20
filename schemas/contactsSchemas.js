@@ -1,4 +1,5 @@
 import Joi from "joi";
+import { regexEmail, regexPhone } from "../models/constants.js";
 
 export const createContactSchema = Joi.object({
   name: Joi.string().min(3).max(20).required().messages({
@@ -7,18 +8,17 @@ export const createContactSchema = Joi.object({
     "any.required": "Set name for contact",
   }),
 
-  email: Joi.string().email().required().messages({
+  email: Joi.string().pattern(regexEmail).required().messages({
     "string.email": "Email is not valid",
     "any.required": "Set email for contact",
+    "string.pattern.base": "Email is not valid",
   }),
 
-  phone: Joi.string()
-    .pattern(/^[+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/)
-    .required()
-    .messages({
-      "string.pattern.base": "Phone is not valid",
-      "any.required": "Set phone for contact",
-    }),
+  phone: Joi.string().pattern(regexPhone).required().messages({
+    "string.pattern.base": "Phone is not valid",
+    "any.required": "Set phone for contact",
+    "string.pattern.base": "Phone is not valid",
+  }),
   favorite: Joi.boolean().optional(),
 });
 
@@ -28,16 +28,15 @@ export const updateContactSchema = Joi.object({
     "string.max": "Name should be less than 20 characters",
   }),
 
-  email: Joi.string().email().optional().messages({
+  email: Joi.string().pattern(regexEmail).optional().messages({
     "string.email": "Email is not valid",
+    "string.pattern.base": "Email is not valid",
   }),
 
-  phone: Joi.string()
-    .pattern(/^[+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/)
-    .optional()
-    .messages({
-      "string.pattern.base": "Phone is not valid",
-    }),
+  phone: Joi.string().pattern(regexPhone).optional().messages({
+    "string.pattern.base": "Phone is not valid",
+    "string.pattern.base": "Phone is not valid",
+  }),
   favorite: Joi.boolean().optional(),
 })
   .min(1)
