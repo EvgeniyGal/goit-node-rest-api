@@ -1,6 +1,7 @@
 import { createToken } from "../helpers/jwt.js";
 import userModel from "../models/User.js";
 import bcrypt from "bcrypt";
+import gravatar from "gravatar";
 
 const getOneUserByEmail = async (email) => {
   return await userModel.findOne({ email });
@@ -8,7 +9,12 @@ const getOneUserByEmail = async (email) => {
 
 const createUser = async (body) => {
   const hashedPassword = await bcrypt.hash(body.password, 10);
-  return await userModel.create({ ...body, password: hashedPassword });
+  const avatarURL = gravatar.url(body.email);
+  return await userModel.create({
+    ...body,
+    avatarURL,
+    password: hashedPassword,
+  });
 };
 
 const loginUser = async (body) => {
@@ -33,7 +39,7 @@ const logoutUser = async (id) => {
   return await userModel.findByIdAndUpdate(id, { token: null });
 };
 
-const updateSubscription = async (id, body) => {
+const updateUserData = async (id, body) => {
   return await userModel.findByIdAndUpdate(id, body);
 };
 
@@ -42,5 +48,5 @@ export default {
   createUser,
   loginUser,
   logoutUser,
-  updateSubscription,
+  updateUserData,
 };

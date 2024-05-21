@@ -6,13 +6,12 @@ import contactsRouter from "./routes/contactsRouter.js";
 import "dotenv/config";
 import usersRouter from "./routes/usersRouter.js";
 
-const DB_URL = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@testcluster.80vox3c.mongodb.net/db-contacts?retryWrites=true&w=majority&appName=testCluster`;
-
 const app = express();
 
 app.use(morgan("tiny"));
 app.use(cors());
 app.use(express.json());
+app.use(express.static("public"));
 
 app.use("/api/contacts", contactsRouter);
 app.use("/api/users", usersRouter);
@@ -27,7 +26,7 @@ app.use((err, req, res, next) => {
 });
 
 mongoose
-  .connect(DB_URL)
+  .connect(process.env.DB_URL)
   .then(() => {
     console.log("Database connection successful");
     app.listen(3000, () => {

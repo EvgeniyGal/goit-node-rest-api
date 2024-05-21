@@ -1,6 +1,10 @@
 import usersServices from "../services/usersServices.js";
+import fs from "fs";
+import Jimp from "jimp";
+import path from "path";
 
 const NOT_FOUND = "Not found";
+const AVATARS_PATH = path.resolve("public", "avatars");
 
 export const createUser = async (req, res) => {
   const body = req.body;
@@ -43,15 +47,40 @@ export const getCurrentUser = async (req, res) => {
     res.status(401).json({ message: "Not authorized" });
     return;
   }
-  res.status(200).json({ email: user.email, subscription: user.subscription });
+  res.status(200).json({
+    email: user.email,
+    subscription: user.subscription,
+    avatarURL: user.avatarURL,
+  });
 };
 
 export const updateSubscription = async (req, res) => {
   const body = req.body;
-  const user = await usersServices.updateSubscription(req.user._id, body);
+  const user = await usersServices.updateUserData(req.user._id, body);
   if (!user) {
     res.status(404).json({ message: NOT_FOUND });
     return;
   }
   res.status(200).json({ email: user.email, subscription: user.subscription });
+};
+
+export const updateAvatar = async (req, res) => {
+  const { _id } = req.user;
+  const { path: oldPath, filename } = req.file;
+  const newFilePath = path.join(AVATARS_PATH, filename);
+  Jimp.read(oldPath)
+    .then((image) => {
+      return image.resize(250, 250).quality(60).write(newFilePath);
+    })
+    .catch((err) => {
+      console.error(err);
+    });
+  fs.unlink(oldPath, () => {});
+  const avatar = path.join("avatars", filename);
+  const updatedUser = await usersServices.updateUserData(_id, {
+    avatarURL: avatar,
+  });
+  res.status(200).json({
+    avatarURL: updatedUser.avatarURL,
+  });
 };

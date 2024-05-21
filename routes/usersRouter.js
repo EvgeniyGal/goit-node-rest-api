@@ -10,9 +10,11 @@ import {
   getCurrentUser,
   loginUser,
   logoutUser,
+  updateAvatar,
   updateSubscription,
 } from "../controllers/usersControllers.js";
 import { validateToken } from "../helpers/validateToken.js";
+import upload from "../helpers/uploadFile.js";
 
 const usersRouter = express.Router();
 
@@ -29,6 +31,13 @@ usersRouter.patch(
   validateToken,
   validateBody(userUpdateSubscriptionSchema),
   updateSubscription
+);
+
+usersRouter.patch(
+  "/avatars",
+  validateToken,
+  upload.single("avatar"),
+  updateAvatar
 );
 
 export default usersRouter;
