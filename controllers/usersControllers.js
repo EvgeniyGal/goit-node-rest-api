@@ -14,9 +14,13 @@ export const createUser = async (req, res) => {
     return;
   }
   const result = await usersServices.createUser(body);
-  res
-    .status(201)
-    .json({ user: { email: result.email, subscription: result.subscription } });
+  res.status(201).json({
+    user: {
+      email: result.email,
+      subscription: result.subscription,
+      avatarURL: result.avatarURL,
+    },
+  });
 };
 
 export const loginUser = async (req, res) => {
@@ -65,7 +69,7 @@ export const updateSubscription = async (req, res) => {
 };
 
 export const updateAvatar = async (req, res) => {
-  const { _id } = req.user;
+  const { _id, avatarURL } = req.user;
   const { path: oldPath, filename } = req.file;
   const newFilePath = path.join(AVATARS_PATH, filename);
   Jimp.read(oldPath)
@@ -75,6 +79,9 @@ export const updateAvatar = async (req, res) => {
     .catch((err) => {
       console.error(err);
     });
+  if (fs.existsSync(path.join("public", avatarURL))) {
+    fs.unlinkSync(path.join("public", avatarURL));
+  }
   fs.unlink(oldPath, () => {});
   const avatar = path.join("avatars", filename);
   const updatedUser = await usersServices.updateUserData(_id, {

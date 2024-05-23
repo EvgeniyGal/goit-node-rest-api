@@ -9,7 +9,7 @@ const getOneUserByEmail = async (email) => {
 
 const createUser = async (body) => {
   const hashedPassword = await bcrypt.hash(body.password, 10);
-  const avatarURL = gravatar.url(body.email);
+  const avatarURL = gravatar.url(body.email, { protocol: "http", s: "250" });
   return await userModel.create({
     ...body,
     avatarURL,
@@ -43,10 +43,15 @@ const updateUserData = async (id, body) => {
   return await userModel.findByIdAndUpdate(id, body);
 };
 
+const deleteUsers = async () => {
+  return await userModel.deleteMany();
+};
+
 export default {
   getOneUserByEmail,
   createUser,
   loginUser,
   logoutUser,
   updateUserData,
+  deleteUsers,
 };
