@@ -69,6 +69,10 @@ export const updateSubscription = async (req, res) => {
 };
 
 export const updateAvatar = async (req, res) => {
+  if (!req.file) {
+    res.status(400).json({ message: "No file uploaded" });
+    return;
+  }
   const { _id, avatarURL } = req.user;
   const { path: oldPath, filename } = req.file;
   const newFilePath = path.join(AVATARS_PATH, filename);
