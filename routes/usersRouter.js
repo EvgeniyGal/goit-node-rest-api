@@ -1,6 +1,7 @@
 import express from "express";
 import validateBody from "../helpers/validateBody.js";
 import {
+  userResendVerificationEmailSchema,
   userSignInSchema,
   userSignUpSchema,
   userUpdateSubscriptionSchema,
@@ -12,6 +13,8 @@ import {
   logoutUser,
   updateAvatar,
   updateSubscription,
+  verifyToken,
+  resendVerificationEmail,
 } from "../controllers/usersControllers.js";
 import { validateToken } from "../helpers/validateToken.js";
 import upload from "../helpers/uploadFile.js";
@@ -38,6 +41,14 @@ usersRouter.patch(
   validateToken,
   upload.single("avatar"),
   updateAvatar
+);
+
+usersRouter.get("/verify/:verificationToken", verifyToken);
+
+usersRouter.post(
+  "/verify",
+  validateBody(userResendVerificationEmailSchema),
+  resendVerificationEmail
 );
 
 export default usersRouter;

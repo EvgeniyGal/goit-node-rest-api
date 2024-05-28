@@ -17,6 +17,13 @@ export const userSignUpSchema = Joi.object({
     }),
 });
 
+export const userResendVerificationEmailSchema = Joi.object({
+  email: Joi.string().pattern(regexEmail).required().messages({
+    "any.required": "missing required field email",
+    "string.pattern.base": "Email is not valid",
+  }),
+});
+
 export const userSignInSchema = Joi.object({
   email: Joi.string().pattern(regexEmail).required().messages({
     "string.email": "Email is not valid",
