@@ -11,13 +11,13 @@ const getOneUserByEmail = async (email) => {
 const createUser = async (body) => {
   const hashedPassword = await bcrypt.hash(body.password, 10);
   const avatarURL = gravatar.url(body.email, { protocol: "http", s: "250" });
-  const verificationToken = createToken({ randomId: nanoid() });
+  const verificationCode = nanoid();
 
   return await userModel.create({
     ...body,
     avatarURL,
     password: hashedPassword,
-    verificationToken,
+    verificationToken: verificationCode,
   });
 };
 

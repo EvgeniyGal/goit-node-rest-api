@@ -33,6 +33,10 @@ export const loginUser = async (req, res) => {
     res.status(401).json({ message: "Email or password is wrong" });
     return;
   }
+  if (!user.verify) {
+    res.status(401).json({ message: "Email not verified" });
+    return;
+  }
   res.status(200).json({
     user: { email: user.email, subscription: user.subscription },
     token: user.token,
