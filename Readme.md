@@ -4,6 +4,8 @@ This is a Node.js REST API for managing contacts. It's built with Express.js and
 All requests require a valid JWT token in the Authorization header.
 Validation of request body, query params and path params is done using Joi.
 
+
+
 ## How to start
 
 1. Clone this repo
